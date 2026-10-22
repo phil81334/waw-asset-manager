@@ -1,0 +1,25 @@
+[package]
+name = "waw-asset-manager"
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-only"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+tempfile = "3"
+image = { version = "0.25.10", default-features = false, features = ["png", "tga"] }
+base64 = "0.22"
+rfd = "0.16"
+rusqlite = { version = "0.32", features = ["bundled"] }
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+opt-level = "s"

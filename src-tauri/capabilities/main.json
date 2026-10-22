@@ -1,0 +1,6 @@
+{
+  "identifier": "main",
+  "description": "Local window events for file dropping, logs and close checks.",
+  "windows": ["main"],
+  "permissions": ["core:default", "core:window:allow-destroy"]
+}

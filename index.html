@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WaW Asset Manager</title>
+    <link rel="icon" href="/src-tauri/icons/icon.png" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main id="app" hidden>
+      <div class="tab-bar">
+        <div class="tabs" role="tablist" aria-label="Asset Manager">
+          <button
+            class="tab active"
+            role="tab"
+            aria-selected="true"
+            data-tab="assets"
+          >
+            Assets
+          </button>
+          <button
+            class="tab"
+            role="tab"
+            aria-selected="false"
+            data-tab="images"
+          >
+            Image import
+          </button>
+        </div>
+        <span>WaW Asset Manager | <span id="version">0.1.0</span></span>
+      </div>
+      <section class="panel" id="assets-panel">
+        <div class="toolbar">
+          <label for="gdt-files">GDT</label>
+          <select id="gdt-files" class="grow">
+            <option value="">Choose a GDT…</option>
+          </select>
+          <button id="open">Open…</button><button id="new-gdt">New GDT…</button>
+          <button id="rescan">Rescan</button
+          ><button id="save" class="primary">Save</button>
+        </div>
+        <p id="document-path" class="hint">Open a GDT or create a new one.</p>
+        <div id="external-change" class="warning" hidden>
+          This GDT changed outside the app.
+          <button id="reload">Reload from disk</button> Unsaved edits will be
+          discarded.
+        </div>
+        <div class="workspace">
+          <aside>
+            <input
+              type="search"
+              id="asset-search"
+              placeholder="Find an asset…"
+              aria-label="Find an asset"
+            />
+            <select id="type-filter" aria-label="Filter asset type">
+              <option value="">All types</option>
+            </select>
+            <div id="asset-list" role="listbox" aria-label="Assets"></div>
+            <div class="toolbar">
+              <button id="new-asset">New…</button
+              ><button id="copy-asset">Copy…</button
+              ><button id="rename-asset">Rename…</button
+              ><button id="delete-asset">Delete</button>
+            </div>
+            <span class="hint" id="asset-count">0 assets</span>
+          </aside>
+          <div class="editor">
+            <div class="toolbar">
+              <strong id="asset-title" class="grow">Select an asset</strong
+              ><span id="asset-type" class="hint"></span>
+            </div>
+            <div class="toolbar">
+              <input
+                type="search"
+                id="property-search"
+                class="grow"
+                placeholder="Find a property…"
+                aria-label="Find a property"
+              /><label for="property-layout">Layout</label>
+              <select id="property-layout">
+                <option value="single">Single column</option>
+                <option value="responsive">Responsive columns</option>
+              </select>
+              <label
+                ><input type="checkbox" id="all-fields" /> All fields</label
+              >
+            </div>
+            <div id="properties">
+              <p class="hint">
+                The installed Modtools define the available fields.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="toolbar conversion-tools">
+          <span class="hint grow"
+            >Uses the original PC converter. Saves first; unrelated assets are
+            not converted.</span
+          ><button id="convert-file">Convert this GDT</button
+          ><button id="convert-selected" class="primary">
+            Convert selected
+          </button>
+        </div>
+      </section>
+      <section class="panel" id="images-panel" hidden>
+        <div class="toolbar">
+          <strong class="grow">Drop PNG or TGA images here</strong
+          ><button id="add-images">Add images…</button
+          ><button id="clear-images">Clear</button>
+        </div>
+        <div id="image-list">
+          <p class="empty">
+            Images are prepared as TGA copies. Your original files are kept.
+          </p>
+        </div>
+        <details id="naming">
+          <summary>Texture naming rules</summary>
+          <p class="hint">
+            Optional prefix/suffix templates. Use {name} for the material name.
+            Each file must match exactly one rule; otherwise assign it below.
+          </p>
+          <div class="rules" id="rules"></div>
+          <div class="toolbar">
+            <button id="apply-rules">Apply rules</button
+            ><button id="save-rules">Save rules</button>
+          </div>
+        </details>
+        <div class="import-options">
+          <label
+            >Project / image folder <input id="project" value="my_materials"
+          /></label>
+          <label
+            >Material type
+            <select id="material-type"></select
+          ></label>
+          <label
+            >Resize
+            <select id="resize">
+              <option value="keep">Keep dimensions</option>
+              <option value="fit">Common power-of-two square</option>
+              <option value="exact">Choose dimensions</option>
+            </select></label
+          >
+          <label
+            >Width
+            <input id="width" type="number" value="1024" min="1" disabled
+          /></label>
+          <label
+            >Height
+            <input id="height" type="number" value="1024" min="1" disabled
+          /></label>
+        </div>
+        <p class="hint" id="resize-info">
+          No resizing. Transparency is kept. No upscaling, automatic cropping or
+          padding.
+        </p>
+        <div class="toolbar">
+          <span class="hint grow"
+            >Adds materials to the open GDT. Save it, then convert. CGFX and
+            16-bit PNG are not supported.</span
+          ><button id="prepare" class="primary">
+            Prepare images &amp; add assets
+          </button>
+        </div>
+      </section>
+      <details class="log-panel" id="log-panel">
+        <summary>Log</summary>
+        <div class="toolbar">
+          <button id="copy-log">Copy log</button
+          ><button id="clear-log">Clear log</button
+          ><span id="log-location" class="hint grow"></span
+          ><button id="cancel" disabled>Cancel conversion</button>
+        </div>
+        <pre id="log" tabindex="0"></pre>
+      </details>
+      <p id="message" role="status">Loading Modtools definitions…</p>
+    </main>
+    <footer>
+      <span id="status">Ready</span>
+      <div class="footer-tools">
+        <span id="environment">Production</span
+        ><button
+          id="about"
+          class="icon-button"
+          title="About"
+          aria-label="About WaW Asset Manager"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 11v6" />
+            <circle
+              cx="12"
+              cy="7.5"
+              r="0.9"
+              fill="currentColor"
+              stroke="none"
+            />
+          </svg>
+        </button>
+      </div>
+    </footer>
+    <dialog id="about-dialog" aria-labelledby="about-title">
+      <div class="dialog-title" id="about-title">About WaW Asset Manager</div>
+      <div class="dialog-body">
+        <p>An unofficial tool made for the World at War modding community.</p>
+        <p>
+          Edit Modtools GDT assets and prepare PNG/TGA texture inputs, using the
+          original installed Treyarch converter. Original images are kept. GDT
+          edits are saved to the selected file. Compiled outputs are written
+          directly by Treyarch's converter.
+        </p>
+        <p>
+          CGFX automation, 16-bit PNG, shader previews and automatic PBR
+          conversion are not included. Requires World at War and its Modtools.
+          Independent of Treyarch, Activision and UGX.
+        </p>
+        <p>
+          Built with JavaScript, Vite, Rust and Tauri. Open source under
+          GPL-3.0; see ATTRIBUTION.md.
+        </p>
+        <p class="credit">Created by <strong>phil81334</strong>.</p>
+        <label for="repo-url">Source, instructions and releases</label
+        ><input
+          id="repo-url"
+          class="repo-url"
+          readonly
+          value="https://github.com/phil81334/waw-asset-manager"
+        />
+        <div class="dialog-actions">
+          <button id="close-about">Close</button>
+        </div>
+      </div>
+    </dialog>
+    <dialog id="startup-error" aria-labelledby="startup-title">
+      <div class="dialog-title" id="startup-title">
+        World at War folder required
+      </div>
+      <div class="dialog-body">
+        <p id="startup-message"></p>
+        <div class="dialog-actions"><button id="quit">Close</button></div>
+      </div>
+    </dialog>
+    <dialog id="action-dialog">
+      <form id="action-form">
+        <div class="dialog-title" id="action-title"></div>
+        <div class="dialog-body">
+          <p id="action-message"></p>
+          <div id="action-fields"></div>
+          <div class="dialog-actions">
+            <button type="button" id="action-cancel">Cancel</button
+            ><button type="submit" class="primary" id="action-ok">OK</button>
+          </div>
+        </div>
+      </form>
+    </dialog>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
