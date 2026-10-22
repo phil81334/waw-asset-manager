@@ -28,6 +28,8 @@ This tab saves TGA copies in `texture_assets/<project>`. Keep dimensions, choose
 
 Installed Modtools schemas supply the fields and defaults. Unknown stored properties are preserved. CGFX-specific automation, 16-bit PNG, shader previews and automatic PBR conversion are not included. Existing DDS references use the native converter's restrictions; image import accepts PNG/TGA only.
 
+**v0.1.0 testing:** The author's hands-on testing covers materials only. Automated checks covered all 26 asset schemas and 3,317 defaults; native command-line conversion tests also passed for physics presets and location-damage tables. Other asset types use the same installed Modtools converter/plugins, but have not all been tested end to end.
+
 GDTs are saved in place. Asset deletion affects the GDT, not compiled files. Conversion blocks duplicate type/name entries and conflicting image output names. **Cancel conversion** stops this app's converter only. Failed/cancelled builds leave outputs as written by the native tool; there are no backups or automatic rollback.
 
 Preferences and the last conversion log live in `%LOCALAPPDATA%\com.phil81334.waw-asset-manager`. No registry associations. Treyarch's tools and game assets are not bundled.
