@@ -6,6 +6,8 @@ Edit World at War Modtools assets with a new UI and the original Treyarch conver
 
 ![WaW Asset Manager](images/waw-asset-manager.png)
 
+[Responsive layout](images/waw-asset-manager-stock-section-layout.png) · [Image import](images/waw-asset-manager-import-tab.png)
+
 ## Download and run
 
 1. Have World at War and its Modtools installed in the same game folder.
