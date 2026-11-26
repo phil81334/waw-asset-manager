@@ -1,8 +1,8 @@
 # WaW Asset Manager
 
-**An unofficial community app. Not affiliated with Treyarch, Activision or UGX.**
-
 Edit World at War Modtools assets with a new UI and the original Treyarch converter. Import PNG/TGA textures, assign their roles and optionally resize them. Made by [phil81334](https://github.com/phil81334). Built with JavaScript, Rust, Vite and Tauri.
+
+WaW Asset Manager is not affiliated with Treyarch, Activision or any modding community.
 
 ![WaW Asset Manager](images/waw-asset-manager.png)
 
@@ -68,9 +68,11 @@ Development uses the folder you choose and can save/convert real assets. Without
 | ------------------- | --------------------------------------------------------------------------------- |
 | `npm run dev`       | Opens the desktop app for development.                                            |
 | `npm run dev:web`   | Previews the UI in a browser. Cannot read GDTs, prepare images or convert assets. |
-| `npm run build`     | Creates `release/waw-asset-manager.exe`.                                          |
+| `npm run build`     | Creates `release/vX.Y.Z/waw-asset-manager.exe`.                                          |
 | `npm run build:web` | Builds UI files only. No EXE.                                                     |
 
-To make your own EXE, run `npm run build`, then copy `release/waw-asset-manager.exe` beside `CoDWaW.exe`.
+The version folder matches `package.json`. If that version is already archived, the build prints the location of your newly compiled EXE.
+
+To make your own EXE, run `npm run build`, then copy `release/vX.Y.Z/waw-asset-manager.exe` beside `CoDWaW.exe`.
 
 [Credits](ATTRIBUTION.md) · [GPL-3.0 licence](LICENCE)
